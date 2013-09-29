@@ -30,12 +30,12 @@ class dlms(object):
 			a = self.ser.read(1)
 			if len(a) == 0:
 				raise dlmsError("Rx Timeout")
-			b = bytearray(a)[0]
+			b = bytearray(a)[0]  #Reads the ascii code of the first character
 			if state == 0:
 				# Read ID string 
-				if b >= 32:
+				if b >= 32: #32 is a space
 					id += a
-				elif b == 13:
+				elif b == 13: #is carrige return
 					state = 1
 				else:
 					raise dlmsError(
@@ -43,7 +43,7 @@ class dlms(object):
 					state = 99
 			elif state == 1:
 				# NL ending ID string
-				if b != 10:
+				if b != 10:  #10 is new line
 					raise dlmsError(
 					    "Ident has 0x%02x after CR" % b)
 					state = 99
@@ -51,7 +51,7 @@ class dlms(object):
 					state = 2
 			elif state == 2:
 				# STX
-				if b != 2:
+				if b != 2: #start of text
 					raise dlmsError(
 					    "Expected STX not 0x%02x" % b)
 					state = 99
